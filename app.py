@@ -18,6 +18,12 @@ def create_users():
     if missing_fields:
         return jsonify({"error": f"{missing_fields} missing"})
 
+    user_email = new_user.get('email')
+    email_requirements = ['@', '.']
+    for char in email_requirements:
+        if char not in user_email:
+            return jsonify({"error": "Please Enter a valid email."})
+
     user_age = new_user.get('age')
     if not isinstance(user_age, int):
         return jsonify({"error": "Enter a valid Age"})
