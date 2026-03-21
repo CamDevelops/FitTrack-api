@@ -26,10 +26,13 @@ def create_users():
 
     user_age = new_user.get('age')
     if not isinstance(user_age, int):
-        return jsonify({"error": "Enter a valid Age"})
+        return jsonify({"error": "Enter a valid Age."})
 
-    uh_password = new_user.get('password')
-    password_bytes = uh_password.encode("utf-8")
+    user_password = new_user.get('password')
+    if len(user_password) <= 11:
+        return jsonify({"error": "Password must be at least 12 characters long."})
+
+    password_bytes = user_password.encode("utf-8")
     salt = bcrypt.gensalt()
 
     hashed_password = bcrypt.hashpw(password_bytes, salt)
