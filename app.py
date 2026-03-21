@@ -32,6 +32,14 @@ def create_users():
     if len(user_password) <= 11:
         return jsonify({"error": "Password must be at least 12 characters long."})
 
+    special_char = ['!', '@', '#', '$', '%', '^', '&', '*']
+
+    if not any(item in user_password for item in special_char):
+        return jsonify({"error": "Password must contain a special Character !@#$%^&*"})
+
+    if " " in user_password:
+        return jsonify({"error": "Password can't have spaces in it."})
+
     password_bytes = user_password.encode("utf-8")
     salt = bcrypt.gensalt()
 
