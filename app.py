@@ -14,7 +14,6 @@ def create_users():
     for field in required_fields:
         if field not in new_user:
             missing_fields.append(field)
-
     if missing_fields:
         return jsonify({"error": f"{missing_fields} missing"})
 
@@ -33,23 +32,28 @@ def create_users():
         return jsonify({"error": "Password must be at least 12 characters long."})
 
     special_char = ['!', '@', '#', '$', '%', '^', '&', '*']
-
     if not any(item in user_password for item in special_char):
         return jsonify({"error": "Password must contain a special Character !@#$%^&*"})
 
     if " " in user_password:
         return jsonify({"error": "Password can't have spaces in it."})
 
-    password_bytes = user_password.encode("utf-8")
-    salt = bcrypt.gensalt()
+    try:
+        password_bytes = user_password.encode("utf-8")
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(password_bytes, salt)
+        json_password = hashed_password.decode('utf-8')
 
-    hashed_password = bcrypt.hashpw(password_bytes, salt)
-    json_password = hashed_password.decode('utf-8')
+        new_user['password'] = json_password
 
-    new_user['password'] = json_password
+        users.append(new_user)
+        return jsonify(users)
 
-    users.append(new_user)
-    return jsonify(users)
+    except ValueError:
+        return jsonify({"error": "Invalid password format."})
+    except Exception:
+        return jsonify({"error": "Something went wrong. Please try again."})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
