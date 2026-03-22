@@ -71,3 +71,23 @@ def signup():
         return jsonify({"error": "Invalid password format."})
     except Exception:
         return jsonify({"error": "Something went wrong. Please try again."})
+
+
+
+@auth.route("/login", methods=["POST"])
+def login():
+    verify_data = request.json
+
+    user = User.query.filter_by(email= verify_data.get('email')).first()
+    if user is None:
+        return jsonify({"error": "Please enter a valid email address."})
+
+    hashed_password = user.password.encode("utf-8")
+    password = verify_data.get('password')
+    password_bytes = password.encode("utf-8")
+
+    password_match = bcrypt.checkpw(password_bytes, hashed_password)
+    if password_match:
+        return jsonify({"message": "You have been logged in!"})
+    else:
+        return jsonify({"error": "Your password is incorrect!!"})
