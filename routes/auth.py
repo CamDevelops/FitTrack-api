@@ -1,17 +1,19 @@
 from flask import jsonify, request, Blueprint
+from database.models import User
+from database.db import db
+from sqlalchemy.exc import IntegrityError
 import bcrypt
 
 auth = Blueprint('auth', __name__)
 
-registered_users = []
-required_user_fields = ["email", "username", "password", "name", "number", "age"]
+REQUIRED_USER_FIELDS = ["email", "username", "password", "name", "ph_number", "age"]
 
 @auth.route("/signup", methods=["POST"])
 def signup():
     user_data = request.json
 
     missing_fields = []
-    for field in required_user_fields:
+    for field in REQUIRED_USER_FIELDS:
         if field not in user_data:
             missing_fields.append(field)
     if missing_fields:
@@ -43,11 +45,27 @@ def signup():
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password_bytes, salt)
         hashed_password_str = hashed_password.decode('utf-8')
-
         user_data['password'] = hashed_password_str
 
-        registered_users.append(user_data)
-        return jsonify(registered_users)
+        new_user = User(
+            username=user_data.get('username'),
+            password=user_data.get('password'),
+            email=user_data.get('email'),
+            name=user_data.get('name'),
+            ph_number=user_data.get('ph_number'),
+            age=user_data.get('age')
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"message": "Account has been Created!"})
+
+    except IntegrityError as e:
+        db.session.rollback()
+        error_message = str(e.orig)
+        if "email" in error_message:
+            return jsonify({"error": "That email is already registered."})
+        if "username" in error_message:
+            return jsonify({"error": "That username has been taken."})
 
     except ValueError:
         return jsonify({"error": "Invalid password format."})
