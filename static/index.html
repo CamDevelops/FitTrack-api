@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shredly — Build Your Best Body</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="src/styles/main.css"/>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="grain"></div>
+
+<!-- ─── LANDING ─── -->
+<div id="landing" class="page active">
+  <nav>
+    <div class="logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="4" fill="#E8260A"/>
+        <g fill="white">
+          <rect x="3" y="17" width="4" height="3" rx="1"/>
+          <rect x="29" y="17" width="4" height="3" rx="1"/>
+          <rect x="6" y="15" width="3" height="7" rx="1"/>
+          <rect x="27" y="15" width="3" height="7" rx="1"/>
+          <rect x="9" y="17.5" width="18" height="2" rx="1"/>
+          <path d="M15 17c0-2 1-4 3-4s3 2 3 4v3c0 1-1 2-3 2s-3-1-3-2v-3z" fill="white" opacity="0.95"/>
+        </g>
+      </svg>
+      SHREDLY
+    </div>
+    <button class="btn-nav" onclick="showPage('login')">Log In</button>
+  </nav>
+
+  <div class="landing-divider"></div>
+  <div class="landing-body">
+
+    <div>
+      <div class="hero">
+        <div class="hero-badge">Your transformation starts now</div>
+        <h1>BUILD YOUR<br><span class="accent">BEST BODY.</span></h1>
+        <p class="hero-sub">Track calories, crush workouts, and hit your goal weight — whether you're cutting fat or stacking muscle. Built for beginners. Trusted by grinders.</p>
+        <div class="hero-ctas">
+          <button class="btn-primary" onclick="showPage('signup')">Get Shredded Free</button>
+          <button class="btn-secondary" onclick="showPage('login')">See How It Works</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-num">47K+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">2.1M</div>
+          <div class="stat-label">Lbs Lost</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">98%</div>
+          <div class="stat-label">Hit Goal Weight</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-right">
+      <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <div>
+          <div class="feature-title">Calorie Tracking</div>
+          <div class="feature-desc">AI-powered food logging that calculates macros and calories with precision.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div>
+          <div class="feature-title">Goal Mapping</div>
+          <div class="feature-desc">Set your target weight and get a custom roadmap to get there fast.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💪</div>
+        <div>
+          <div class="feature-title">Workout Plans</div>
+          <div class="feature-desc">Beginner to advanced programs built around your schedule and goals.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <div>
+          <div class="feature-title">Progress Tracking</div>
+          <div class="feature-desc">Visual charts that show your body transformation week by week.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</div>
+
+<!-- ─── LOGIN ─── -->
+<div id="login" class="page">
+  <div class="top-line"></div>
+
+  <div class="auth-header">
+    <button class="back-btn" onclick="showPage('landing')">←</button>
+    <div class="logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="4" fill="#E8260A"/>
+        <g fill="white">
+          <rect x="3" y="17" width="4" height="3" rx="1"/>
+          <rect x="29" y="17" width="4" height="3" rx="1"/>
+          <rect x="6" y="15" width="3" height="7" rx="1"/>
+          <rect x="27" y="15" width="3" height="7" rx="1"/>
+          <rect x="9" y="17.5" width="18" height="2" rx="1"/>
+          <path d="M15 17c0-2 1-4 3-4s3 2 3 4v3c0 1-1 2-3 2s-3-1-3-2v-3z" fill="white" opacity="0.95"/>
+        </g>
+      </svg>
+      SHREDLY
+    </div>
+  </div>
+
+  <div class="auth-container">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="showPage('login')">Log In</button>
+      <button class="auth-tab" onclick="showPage('signup')">Sign Up</button>
+    </div>
+
+    <h2 class="auth-title">Log Back In</h2>
+    <p class="auth-subtitle">Your grind doesn't stop — neither do we.</p>
+
+    <div class="error-msg" id="login-error"></div>
+    <div class="success-msg" id="login-success"></div>
+
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <div class="input-wrap">
+        <span class="input-icon">✉</span>
+        <input type="email" class="form-input" id="login-email" placeholder="you@example.com"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" class="form-input" id="login-password" placeholder="Your password"/>
+        <button class="eye-btn" onclick="togglePass('login-password')">👁</button>
+      </div>
+    </div>
+
+    <div class="form-extras">
+      <label class="remember-wrap">
+        <input type="checkbox"/> Remember me
+      </label>
+      <button class="forgot-link">Forgot password?</button>
+    </div>
+
+    <button class="btn-submit" id="login-btn" onclick="handleLogin()">Let's Get It</button>
+
+    <div class="divider"><span>Or continue with</span></div>
+
+    <div class="social-btns">
+      <button class="btn-social">G&nbsp; Google</button>
+      <button class="btn-social">⬛&nbsp; Apple</button>
+    </div>
+
+    <div class="auth-footer">
+      Don't have an account? <a onclick="showPage('signup')">Sign up free →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SIGNUP ─── -->
+<div id="signup" class="page">
+  <div class="top-line"></div>
+
+  <div class="auth-header">
+    <button class="back-btn" onclick="showPage('landing')">←</button>
+    <div class="logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="4" fill="#E8260A"/>
+        <g fill="white">
+          <rect x="3" y="17" width="4" height="3" rx="1"/>
+          <rect x="29" y="17" width="4" height="3" rx="1"/>
+          <rect x="6" y="15" width="3" height="7" rx="1"/>
+          <rect x="27" y="15" width="3" height="7" rx="1"/>
+          <rect x="9" y="17.5" width="18" height="2" rx="1"/>
+          <path d="M15 17c0-2 1-4 3-4s3 2 3 4v3c0 1-1 2-3 2s-3-1-3-2v-3z" fill="white" opacity="0.95"/>
+        </g>
+      </svg>
+      SHREDLY
+    </div>
+  </div>
+
+  <div class="auth-container">
+    <div class="auth-tabs">
+      <button class="auth-tab" onclick="showPage('login')">Log In</button>
+      <button class="auth-tab active" onclick="showPage('signup')">Sign Up</button>
+    </div>
+
+    <h2 class="auth-title">Start Your Shred</h2>
+    <p class="auth-subtitle">Free forever. No credit card. Just results.</p>
+
+    <div class="error-msg" id="signup-error"></div>
+    <div class="success-msg" id="signup-success"></div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">First Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-input" id="signup-name" placeholder="Alex"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">@</span>
+          <input type="text" class="form-input" id="signup-username" placeholder="alex99"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <div class="input-wrap">
+        <span class="input-icon">✉</span>
+        <input type="email" class="form-input" id="signup-email" placeholder="you@example.com"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+      <div class="input-wrap">
+        <span class="input-icon">📱</span>
+        <input type="tel" class="form-input" id="signup-phone" placeholder="555-1234"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Age</label>
+      <div class="input-wrap">
+        <span class="input-icon">📅</span>
+        <input type="number" class="form-input" id="signup-age" placeholder="25" min="13" max="120"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" class="form-input" id="signup-password" placeholder="Min. 12 characters + special char"/>
+        <button class="eye-btn" onclick="togglePass('signup-password')">👁</button>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="signup-btn" onclick="handleSignup()">Start For Free</button>
+
+    <div class="auth-footer">
+      Already have an account? <a onclick="showPage('login')">Log in →</a>
+    </div>
+  </div>
+</div>
+
+<script src="src/js/background.js"></script>
+<script src="src/js/app.js"></script>
+</body>
+</html>
