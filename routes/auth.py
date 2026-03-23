@@ -2,6 +2,7 @@ from flask import jsonify, request, Blueprint
 from database.models import User
 from database.db import db
 from sqlalchemy.exc import IntegrityError
+from flask_jwt_extended import create_access_token
 import bcrypt
 
 auth = Blueprint('auth', __name__)
@@ -73,7 +74,6 @@ def signup():
         return jsonify({"error": "Something went wrong. Please try again."})
 
 
-
 @auth.route("/login", methods=["POST"])
 def login():
     verify_data = request.json
@@ -88,6 +88,7 @@ def login():
 
     password_match = bcrypt.checkpw(password_bytes, hashed_password)
     if password_match:
-        return jsonify({"message": "You have been logged in!"})
+        access_token = create_access_token(identity=user.id)
+        return jsonify({"message": "You have been logged in!", "access_token": access_token})
     else:
         return jsonify({"error": "Your password is incorrect!!"})
