@@ -2,7 +2,7 @@ from flask import jsonify, request, Blueprint
 from database.models import User
 from database.db import db
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 import bcrypt
 
 auth = Blueprint('auth', __name__)
@@ -88,7 +88,14 @@ def login():
 
     password_match = bcrypt.checkpw(password_bytes, hashed_password)
     if password_match:
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
         return jsonify({"message": "You have been logged in!", "access_token": access_token})
     else:
         return jsonify({"error": "Your password is incorrect!!"})
+
+
+@auth.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    return jsonify(message="Access granted to protected route!")
+
