@@ -7,8 +7,6 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 import os
 
-
-
 app = Flask(__name__)
 app.config.from_object(Config)
 

@@ -2,6 +2,7 @@ flask
 bcrypt
 flask-sqlalchemy
 sqlalchemy
-flask-jwt-extended
+flask-jwt-extended>=4.4.0
+PyJWT>=2.0.0,<3.0.0
 python-dotenv
 flask-cors

@@ -2,8 +2,10 @@ from flask import jsonify, request, Blueprint
 from database.models import User
 from database.db import db
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, decode_token
+from datetime import timedelta
 import bcrypt
+from flask_jwt_extended.exceptions import JWTDecodeError, JWTExtendedException
 
 auth = Blueprint('auth', __name__)
 
@@ -99,3 +101,44 @@ def login():
 def protected():
     return jsonify(message="Access granted to protected route!")
 
+
+@auth.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    verify_data = request.json
+
+    user = User.query.filter_by(email=verify_data.get('email')).first()
+    if user is None:
+        return jsonify({"error": "Please enter a valid email address."})
+    else:
+        token_expiration = timedelta(minutes=15)
+        temp_token = create_access_token(identity=user.email, expires_delta=token_expiration)
+        return jsonify({"message": "Here is your verification code", "verification":temp_token})
+
+
+@auth.route("/reset-password", methods=["POST"])
+def reset_password():
+    updated_data = request.json
+    encoded_token = updated_data.get("verification")
+    new_password = updated_data.get("new_password")
+
+    try:
+        verified_token = decode_token(encoded_token)
+        user_email = verified_token.get("sub")
+
+        user = User.query.filter_by(email=user_email).first()
+        if user is None:
+            return jsonify({"error": "Please enter a valid email address."})
+        else:
+            password_bytes = new_password.encode("utf-8")
+            salt = bcrypt.gensalt()
+            hashed_password = bcrypt.hashpw(password_bytes, salt)
+            hashed_password_str = hashed_password.decode('utf-8')
+            user.password = hashed_password_str
+            db.session.commit()
+            return jsonify({"message": "Your password has been successfully reset!"})
+
+    except JWTDecodeError:
+        return jsonify({"message": "Verification link is invalid or has expired!"})
+
+    except JWTExtendedException:
+        return jsonify({"message": "Something went wrong with your reset link. Please try again."}), 401
