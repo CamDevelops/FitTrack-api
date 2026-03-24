@@ -110,3 +110,100 @@ async function handleSignup() {
   btn.disabled = false;
   btn.textContent = 'Start For Free';
 }
+
+// ─── FORGOT PASSWORD ───
+let currentToken = '';
+
+async function handleForgotPassword() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const btn = document.getElementById('forgot-btn');
+  const tokenDisplay = document.getElementById('token-display');
+
+  if (!email) {
+    showError('forgot-error', 'Please enter your email address.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch(`${API}/forgot_password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (data.verification) {
+      currentToken = data.verification;
+      document.getElementById('token-box').textContent = currentToken;
+      tokenDisplay.classList.add('show');
+      showSuccess('forgot-success', '✅ Reset token generated! Copy it below.');
+    } else {
+      showError('forgot-error', data.error || 'Could not generate reset token.');
+    }
+  } catch (e) {
+    showError('forgot-error', 'Could not connect to server. Make sure Flask is running.');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Send Reset Link';
+}
+
+function copyToken() {
+  const tokenBox = document.getElementById('token-box');
+  const copyBtn = document.getElementById('copy-btn');
+
+  navigator.clipboard.writeText(currentToken).then(() => {
+    copyBtn.textContent = '✓ Copied!';
+    copyBtn.style.borderColor = 'var(--red)';
+    copyBtn.style.background = 'rgba(232, 38, 10, 0.1)';
+
+    setTimeout(() => {
+      copyBtn.textContent = 'Copy Token';
+      copyBtn.style.borderColor = '';
+      copyBtn.style.background = '';
+    }, 2000);
+  });
+}
+
+// ─── RESET PASSWORD ───
+async function handleResetPassword() {
+  const verification = document.getElementById('reset-token').value.trim();
+  const new_password = document.getElementById('reset-password-input').value;
+  const btn = document.getElementById('reset-btn');
+
+  if (!verification || !new_password) {
+    showError('reset-error', 'Please fill in all fields.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Resetting...';
+
+  try {
+    const res = await fetch(`${API}/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ verification, new_password })
+    });
+
+    const data = await res.json();
+
+    if (data.message) {
+      showSuccess('reset-success', '🔥 Password reset successful! Redirecting to login...');
+      document.getElementById('reset-token').value = '';
+      document.getElementById('reset-password-input').value = '';
+      setTimeout(() => showPage('login'), 2000);
+    } else {
+      showError('reset-error', data.error || 'Reset failed. Token may be invalid or expired.');
+    }
+  } catch (e) {
+    showError('reset-error', 'Could not connect to server. Make sure Flask is running.');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Reset Password';
+}

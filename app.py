@@ -1,5 +1,6 @@
 from flask import Flask, send_from_directory
 from routes.auth import auth
+from routes.profile import profile
 from database.db import db
 from database.models import User  # required for SQLAlchemy to register the model
 from config import Config
@@ -12,6 +13,7 @@ app.config.from_object(Config)
 
 db.init_app(app)
 app.register_blueprint(auth)
+app.register_blueprint(profile)
 
 with app.app_context():
     db.create_all()
